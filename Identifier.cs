@@ -2,50 +2,49 @@
 
 namespace Squeaky_Clean
 {
-public static class Identifier
-{
-    public static string Clean(string identifier)
+    public static class Identifier
     {
-        if (string.IsNullOrEmpty(identifier))
-            return identifier;
-
-        identifier = ConvertKebabToCamel(identifier);
-
-        StringBuilder sb = new(identifier.Length);
-
-        foreach (char c in identifier)
+        public static string Clean(string identifier)
         {
-            if (Char.IsControl(c))
-                sb.Append("CTRL");
+            if (string.IsNullOrEmpty(identifier))
+                return identifier;
 
-            else if (Char.IsWhiteSpace(c))
-                sb.Append("_");
+            bool capitalizeNext = false;
 
-            else if (char.IsLetter(c) && !c.IsGreekChar())
-                sb.Append(c);
+            StringBuilder sb = new(identifier.Length);
 
+            foreach (char c in identifier)
+            {
+                if (Char.IsControl(c))
+                {
+                    sb.Append("CTRL");
+                    capitalizeNext = false;
+                }
+
+                else if (Char.IsWhiteSpace(c))
+                {
+                    sb.Append("_");
+                    capitalizeNext = false;
+                }
+
+                else if(c == '-')
+                {
+                    capitalizeNext = true;
+                }
+
+                else if (char.IsLetter(c) && !c.IsGreekChar())
+                {
+                    sb.Append(capitalizeNext ? char.ToUpper(c) : c);
+                    capitalizeNext = false;
+                }
+
+            }
+
+            return sb.ToString();
         }
 
-        return sb.ToString();
+        private static bool IsGreekChar(this char c) => (c >= 0x03B1 && c <= 0x03C9); // Lower Case Greek Characters
     }
-
-    private static bool IsGreekChar(this char c) => (c >= 0x03B1 && c <= 0x03C9); // Lower Case Greek Characters
-
-    private static string ConvertKebabToCamel(string id)
-    {
-        var stringArray = id.Split('-');
-        var output = new StringBuilder(stringArray[0]);
-
-        for (var i = 1; i < stringArray.Length; i++)
-        {
-            output.Append(char.ToUpper(stringArray[i][0]) + stringArray[i].Substring(1));
-        }
-
-        return output.ToString();
-    }
-
-}
-
 }
 
 
