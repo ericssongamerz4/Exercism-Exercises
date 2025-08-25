@@ -48,34 +48,14 @@ namespace SumOfMultiples
 
     public static class SumOfMultiples
     {
-        public static int Sum(IEnumerable<int> multiples, int max)
-        {
-            if (multiples == null || max == 0)
-                return 0;
+        public static int Sum(IEnumerable<int> multiples, int max) => 
+            Enumerable.Range(0, max)                                                                       
+                      .Where(result => multiples.Any(value => value > 0 && result % value == 0)).Sum();
 
-            HashSet<int> result = new();
-
-            foreach (int value in multiples)
-            {
-                if (value != 0)
-                {
-                    for (int i = 1; i * value < max; i++)
-                    {
-                        result.Add(value * i);
-                    }
-                }
-            }
-
-            return result.Sum();
-        }
+        #region MyAproach
+        /*
+        I changed my approach so i can use an Enumerable and LINQ.
+         */
+        #endregion
     }
-
-    #region MyAproach
-    /*
-    So for my approach i thought of using a hash set because the values added there 
-    can't be the same, i used a foreach loop to iterate through the list of the items (the multiples), 
-    then I used a for loop to add the multiples of the item to the hash set until it reaches the level(max), 
-    then return the sum of all the values.
-     */
-    #endregion
 }
