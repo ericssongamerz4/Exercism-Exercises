@@ -6,48 +6,53 @@
         {
             List<string> result = [];
 
-            for (int i = 0; i < strand.Length; i+=3)
+            if(strand.Length % 3 != 0)
+                throw new ArgumentException("Strand length must be a multiple of 3.");
+
+            for (int i = 0; i < strand.Length; i += 3)
             {
-                string protein = strand.Substring(i,3);
-                switch (protein)
-                {
-                    case "AUG":
-                        result.Add("Methionine");
-                        break;
+                 string? protein = GetProteinValue(strand.Substring(i, 3));
 
-                    case "UUU" or "UUC":
-                        result.Add("Phenylalanine");
-                        break;
+                if (protein is null)
+                    return result.ToArray();
 
-                    case "UUA" or "UUG":
-                        result.Add("Leucine");
-                        break;
-
-                    case "UCU" or "UCC" or "UCA" or "UCG":
-                        result.Add("Serine");
-                        break;
-
-                    case "UAC" or "UAU":
-                        result.Add("Tyrosine");
-                        break;
-
-                    case "UGC" or "UGU":
-                        result.Add("Cysteine");
-                        break;
-
-                    case "UGG":
-                        result.Add("Tryptophan");
-                        break;
-
-                    case "UAA" or "UAG" or "UGA":
-                        return result.ToArray();
-
-                    default:
-                        throw new Exception($"{protein} doesn't exist.");
-                }
+                result.Add(protein);
             }
 
             return result.ToArray();
+        }
+
+        private static string? GetProteinValue(string strand)
+        {
+            switch (strand)
+            {
+                case "AUG":
+                    return "Methionine";
+
+                case "UUU" or "UUC":
+                    return "Phenylalanine";
+
+                case "UUA" or "UUG":
+                    return "Leucine";
+
+                case "UCU" or "UCC" or "UCA" or "UCG":
+                    return "Serine";
+
+                case "UAC" or "UAU":
+                    return "Tyrosine";
+
+                case "UGC" or "UGU":
+                    return "Cysteine";
+
+                case "UGG":
+                    return "Tryptophan";
+
+                case "UAA" or "UAG" or "UGA":
+                    return null;
+
+                default:
+                    throw new ArgumentException($"{strand} doesn't exist.");
+            }
         }
     }
 }
