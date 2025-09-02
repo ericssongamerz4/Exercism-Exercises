@@ -5,45 +5,20 @@
         public static int Score(string input)
         {
             int score = 0;
-
-            char[] letters = input.ToUpper().ToCharArray();
-            foreach (char c in letters)
+            foreach (char c in input.ToUpperInvariant())
             {
-                switch (c)
+                score += c switch
                 {
-                    case 'A' or 'E' or 'I' or 'O' or 'U' or 'L' or 'N' or 'R' or 'S' or 'T':
-                        score += 1;
-                        break;
-
-                    case 'D' or 'G':
-                        score += 2;
-                        break;
-
-                    case 'B' or 'C' or 'M' or 'P':
-                        score += 3;
-                        break;
-
-                    case 'F' or 'H' or 'V' or 'W' or 'Y':
-                        score += 4;
-                        break;
-
-                    case 'K':
-                        score += 5;
-                        break;
-
-                    case 'J' or 'X':
-                        score += 8;
-                        break;
-
-                    case 'Q' or 'Z':
-                        score += 10;
-                        break;
-
-                    default:
-                        throw new ArgumentException($"{input} has invalid charcters.");
-                }
+                    'A' or 'E' or 'I' or 'O' or 'U' or 'L' or 'N' or 'R' or 'S' or 'T' => 1,
+                    'D' or 'G' => 2,
+                    'B' or 'C' or 'M' or 'P' => 3,
+                    'F' or 'H' or 'V' or 'W' or 'Y' => 4,
+                    'K' => 5,
+                    'J' or 'X' => 8,
+                    'Q' or 'Z' => 10,
+                    _ => throw new ArgumentException($"{input} has invalid charcters."),
+                };
             }
-
             return score;
         }
     }
