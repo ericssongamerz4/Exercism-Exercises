@@ -2,20 +2,17 @@ namespace Exercism_Exercises.Exercises.Raindrops
 {
     public static class Raindrops
     {
+        private static readonly Dictionary<int, string> rainSounds = new()
+        {
+            {3, "Pling"},{5,"Plang"},{7, "Plong"},
+        };
+
         public static string Convert(int number)
         {
-            string result = string.Empty;
+            string result = String.Concat(rainSounds.Where(sound => number % sound.Key == 0)
+                                                    .Select(sound => sound.Value));
 
-            if (number % 3 == 0)
-                result += "Pling";
-
-            if (number % 5 == 0)
-                result += "Plang";
-
-            if (number % 7 == 0)
-                result += "Plong";
-
-            return string.IsNullOrEmpty(result) ? number.ToString() : result;
+            return (string.IsNullOrEmpty(result)) ? number.ToString() : result.ToString();
         }
     }
 
