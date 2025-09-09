@@ -2,50 +2,34 @@ namespace Exercism_Exercises.Exercises.KindergartenGarden
 {
     public enum Plant
     {
-        Violets,
-        Radishes,
-        Clover,
-        Grass
+        Violets = 'V',
+        Radishes = 'R',
+        Clover = 'C',
+        Grass = 'G'
     }
     public class KindergartenGarden
     {
-        private readonly List<string> students = new()
-        {
-            "Alice",
-            "Bob",
-            "Charlie",
-            "David",
-            "Eve",
-            "Fred",
-            "Ginny",
-            "Harriet",
-            "Ileana",
-            "Joseph",
-            "Kincaid",
-            "Larry",
-        };
+        private readonly List<string> students =
+        [
+            "Alice", "Bob", "Charlie", "David", "Eve", "Fred", "Ginny", "Harriet", "Ileana", "Joseph", "Kincaid", "Larry",
+        ];
+        private readonly IReadOnlyList<string> plantsDiagram;
 
-        private readonly Dictionary<char, Plant> diagramEncoding = new()
-        {
-            {'V', Plant.Violets}, {'R', Plant.Radishes}, {'C', Plant.Clover}, {'G', Plant.Grass},
-        };
-
-        private string[] plantsDiagram;
-
-        public KindergartenGarden(string diagram)
-        {
-            plantsDiagram = diagram.Split('\n');
-        }
+        public KindergartenGarden(string diagram) => plantsDiagram = diagram.Split('\n');
 
         public IEnumerable<Plant> Plants(string student)
-        {
+        {            
             int studentIndex = students.IndexOf(student);
+
+            if (studentIndex == -1)
+                throw new ArgumentException($"{student} does not exist.");
+
             int startingPos = studentIndex * 2;
 
-            foreach (var diagram in plantsDiagram)
+            foreach (string row in plantsDiagram)
             {
-                yield return diagramEncoding.GetValueOrDefault(diagram[startingPos]);
-                yield return diagramEncoding.GetValueOrDefault(diagram[startingPos+1]);
+                yield return (Plant) row[startingPos];
+                yield return (Plant) row[startingPos + 1];
             }
         }
     }
