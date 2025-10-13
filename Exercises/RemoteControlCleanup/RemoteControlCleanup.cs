@@ -1,14 +1,14 @@
 public class RemoteControlCar
 {
-    public RemoteControlCar()
-    {
-        Telemetry = new CarTelemetry(this);
-    }
-
-    public CarTelemetry Telemetry { get; }
-    public string CurrentSponsor { get; private set; }
+    public ITelemetry Telemetry { get; }
+    public string CurrentSponsor { get; private set; } = string.Empty;
 
     private Speed currentSpeed;
+
+    public RemoteControlCar()
+    {
+        Telemetry = new RemoteControlCarTelemetry(this);
+    }
 
     public string GetSpeed()
     {
@@ -25,11 +25,19 @@ public class RemoteControlCar
     {
         currentSpeed = speed;
     }
-    public class CarTelemetry
+
+    public interface ITelemetry
+    {
+        public void Calibrate();
+        public bool SelfTest();
+        public void ShowSponsor(string sponsorName);
+        public void SetSpeed(decimal amount, string unitsString);
+    }
+    public class RemoteControlCarTelemetry : ITelemetry
     {
         private RemoteControlCar car;
 
-        public CarTelemetry(RemoteControlCar car)
+        public RemoteControlCarTelemetry(RemoteControlCar car)
         {
             this.car = car;
         }
@@ -60,7 +68,6 @@ public class RemoteControlCar
         }
     }
 
-
     private enum SpeedUnits
     {
         MetersPerSecond,
@@ -90,4 +97,3 @@ public class RemoteControlCar
     }
 
 }
-
