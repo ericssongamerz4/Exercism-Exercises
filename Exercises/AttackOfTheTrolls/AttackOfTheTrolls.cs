@@ -14,7 +14,7 @@ static class Permissions
 
     public static Permission Revoke(Permission current, Permission revoke) => current & ~revoke;
 
-    public static bool Check(Permission current, Permission check) => (current & check) == check;
+    public static bool Check(Permission current, Permission check) => current.HasFlag(check);
 }
 
 enum AccountType
@@ -27,11 +27,11 @@ enum AccountType
 [Flags]
 enum Permission
 {
-    None = 0b0000,
-    Read = 0b0001,
-    Write = 0b0010,
-    Delete = 0b0100,
-    All = 0b0111,
+    None = 0,
+    Read = 1 << 0,
+    Write = 1 << 1,
+    Delete = 1 << 2,
+    All = Read | Write | Delete
 }
 
 //Made by ericssonGamerz4
