@@ -4,31 +4,22 @@ namespace Exercism_Exercises.Exercises.PhoneNumber;
 
 public class PhoneNumber
 {
+    private const string CountryCodePattern = @"1?";
+    private const string AreaCodePattern = @"(?<areacode>[2-9]\d{2})";
+    private const string ExchangeCodePattern = @"(?<exchangecode>[2-9]\d{2})";
+    private const string SubscriberNumberPattern = @"(?<subscribernumber>\d{4})";
+    private const string NonDigitPattern = @"[^\d]*?";
+    private const string PhoneNumberPattern = $"^{NonDigitPattern}{CountryCodePattern}{NonDigitPattern}{AreaCodePattern}{NonDigitPattern}{ExchangeCodePattern}{NonDigitPattern}{SubscriberNumberPattern}{NonDigitPattern}$";
+    //private const string PhoneNumberPattern = @"^[^\d]*?1?[^\d]*?([2-9]\d{2})[^\d]*?([2-9]\d{2})[^\d]*?(\d{4})[^\d]*$";
+
     public static string Clean(string phoneNumber)
     {
-        string cleanPhoneNumber = GetNumbersFromString(phoneNumber);
+        var match = Regex.Match(phoneNumber, PhoneNumberPattern);
 
-        if(!IsNumberValid(cleanPhoneNumber,out string res))
-           throw new ArgumentException();
+        if (!match.Success)
+            throw new ArgumentException("Invalid phone number", nameof(phoneNumber));
 
-        return res;
-    }
-    private static string GetNumbersFromString(string phoneNumber) => Regex.Replace(phoneNumber, @"[^\d]", "");
-    private static bool IsNumberValid(string cleanPhoneNumber, out string finalPhoneNumber)
-    {
-        cleanPhoneNumber = Regex.Replace(cleanPhoneNumber,"^1",string.Empty);
-
-        string n = @"[2-9]";
-        string x = @"[0-9]";
-
-        bool isValid = Regex.IsMatch(cleanPhoneNumber,$"{n}{x}{x}{n}{x}{x}{x}{x}{x}{x}");
-
-        finalPhoneNumber = cleanPhoneNumber;
-
-        if (cleanPhoneNumber.Length != 10)
-            return false;
-
-        return isValid;
+        return $"{match.Groups[1].Value}{match.Groups[2].Value}{match.Groups[3].Value}";
     }
 }
 //Made by ericssonGamerz4          
