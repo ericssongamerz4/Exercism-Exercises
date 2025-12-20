@@ -4,29 +4,40 @@ namespace Exercism_Exercises.Exercises.Sieve;
 
 public static class Sieve
 {
+    // Function to return all prime numbers up to n
     public static int[] Primes(int limit)
-    {
-        List<int> result = new();
+    {        
+        // Boolean array to mark primes
+        bool[] prime = new bool[limit + 1];
 
+        for (int i = 0; i <= limit; i++)
+        {
+            prime[i] = true;
+        }
+
+        // Sieve of Eratosthenes
+        for (int p = 2; p * p <= limit; p++)
+        {
+            if (prime[p])
+            {
+                for (int i = p * p; i <= limit; i += p)
+                {
+                    prime[i] = false;
+                }
+            }
+        }
+
+        // Store primes in list
+        List<int> res = new List<int>();
         for (int i = 2; i <= limit; i++)
         {
-            if(IsPrime(i))
-                result.Add(i);
+            if (prime[i])
+            {
+                res.Add(i);
+            }
         }
-        return result.ToArray();
-    }
 
-    public static bool IsPrime(int num)
-    {
-        if (num <= 1) return false;
-        if (num == 2) return true;
-        if (num % 2 == 0) return false;
-
-        var boundary = (int)Math.Floor(Math.Sqrt(num));
-        for (int i = 3; i <= boundary; i += 2)
-            if (num % i == 0)
-                return false;
-        return true;
+        return res.ToArray();
     }
 }
 //Made by ericssonGamerz4      
